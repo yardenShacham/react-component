@@ -25,6 +25,7 @@ export class dateService {
             done = count++ > 2 && monthIndex !== date.month();
             monthIndex = date.month();
         }
+        weeks[weeks.length-1][0].isLastStartWeek = true;
         return weeks;
     }
 

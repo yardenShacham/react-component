@@ -2,7 +2,9 @@ export const formats = {
     default: "YYYY-MM-DD",
     veryShurt: "MMMM, YYYY",
     fullDay: "dddd",
-    shurtDay: "ddd"
+    shurtDay: "ddd",
+    shurtMonth: "MMMM",
+    shurtYear: "YYYY"
 };
 export const dateTypes = {
     day: "day",

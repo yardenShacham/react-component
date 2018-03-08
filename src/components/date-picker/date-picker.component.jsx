@@ -3,6 +3,23 @@ import {dateService} from '../../services/dateService';
 import {CalendarMonth} from './calendar-month';
 import {formats} from '../../utils/dateUtils';
 
+const CalendarPages = () => (
+    <div className="calendar-pages">
+        <div className="page"></div>
+        <div className="page"></div>
+        <div className="page"></div>
+        <div className="page"></div>
+        <div className="page"></div>
+        <div className="page"></div>
+        <div className="page"></div>
+        <div className="page"></div>
+        <div className="page"></div>
+        <div className="page"></div>
+        <div className="page"></div>
+        <div className="page"></div>
+    </div>
+)
+
 export class DatePicker extends React.Component {
 
     constructor(props) {
@@ -11,15 +28,16 @@ export class DatePicker extends React.Component {
     }
 
     getProps() {
-        const {isFullDayFormat, titleDateFormat} = this.props;
+        const {isFullDayFormat, titleDateMonthFormat, titleDateYearFormat} = this.props;
         return {
             isFullDayFormat: isFullDayFormat || formats.fullDay,
-            titleDateFormat: titleDateFormat || formats.veryShurt
+            titleDateMonthFormat: titleDateMonthFormat || formats.shurtMonth,
+            titleDateYearFormat: titleDateYearFormat || formats.shurtYear
         };
     }
 
     render() {
-        const {isFullDayFormat, titleDateFormat} = this.getProps();
+        const {isFullDayFormat, titleDateMonthFormat, titleDateYearFormat} = this.getProps();
         const now = this.dateService.getCurrentDate();
         const daysOfWeek = this.dateService.getDaysOfWeek(isFullDayFormat)
         const {currentDate, calendar} = this.dateService.getCalendar(now);
@@ -27,7 +45,11 @@ export class DatePicker extends React.Component {
             <div className="date-picker">
                 <CalendarMonth weeks={calendar}
                                daysOfWeek={daysOfWeek}
-                               currentDate={currentDate.format(titleDateFormat)}/>
+                               currentDate={{
+                                   month: currentDate.format(titleDateMonthFormat),
+                                   year: currentDate.format(titleDateYearFormat)
+                               }}/>
+                <CalendarPages/>
             </div>);
     }
 }
