@@ -1,0 +1,28 @@
+.calendar-month {
+  display: flex;
+  flex-direction: column;
+  .calendar-title {
+    display: flex;
+    flex-direction: column;
+    .daysOfWeek {
+      display: flex;
+      flex-direction: row;
+    }
+  }
+  .week {
+    display: flex;
+    flex-direction: row;
+  }
+  .day {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+    width: 70px;
+    min-height: 40px;
+    background: gray;
+    &.currentMonth {
+      background: lightblue;
+    }
+  }
+}

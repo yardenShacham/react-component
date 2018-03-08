@@ -17,14 +17,15 @@
   },
   "scripts": {
     "test": "jest prepublish",
-    "start": "webpack-dev-server",
+    "start": "webpack-dev-server -d",
     "build": "node rollup-build.js",
     "postbuild": "node prod-script.js",
     "prod": "npm run build && cd dist && npm publish"
   },
   "dependencies": {
     "react": "^16.2.0",
-    "react-dom": "^16.2.0"
+    "react-dom": "^16.2.0",
+    "moment": "^2.21.0"
   },
   "devDependencies": {
     "@types/es6-promise": "^3.3.0",
