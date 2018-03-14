@@ -27,15 +27,12 @@
       color: white;
       font-size: 30px;
       display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
+      justify-content: space-around;
+      align-items: center;
       border: 1px solid black;
-      height: 60px;
-      .month {
-        margin-left: 10px;
-      }
-      .year {
-        margin-right: 10px;
+      height: 70px;
+      .move-month {
+        cursor: pointer;
       }
       .navigator {
         width: 50%;
@@ -69,11 +66,28 @@
       color: black;
       background: gray;
     }
-    &.next-month-flipper{
+    &.next-month-flipper {
       position: absolute;
       top: 42.5%;
       left: 28px;
       border-bottom-left-radius: 40px;
     }
   }
+}
+
+i {
+  border: solid black;
+  border-width: 0 7px 7px 0;
+  display: inline-block;
+  padding: 6px;
+}
+
+.right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
 }

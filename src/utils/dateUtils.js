@@ -9,7 +9,8 @@ export const formats = {
 export const dateTypes = {
     day: "day",
     addDay: "d",
-    addWeek: "w"
+    addWeek: "w",
+    addMonth: 'm'
 };
 
 export const removeTime = (date) => date.day(0).hour(0).minute(0).second(0).millisecond(0);

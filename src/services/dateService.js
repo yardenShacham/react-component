@@ -6,11 +6,7 @@ export class dateService {
 
     getCalendar(startMonth) {
         let currentDate = removeTime(startMonth.clone().date(1));
-        const calendar = this.buildMonth(currentDate, startMonth.clone());
-        return {
-            currentDate,
-            calendar
-        };
+        return this.buildMonth(currentDate, startMonth.clone());
     }
 
     buildMonth(startMonth, currentMonth) {
@@ -25,7 +21,7 @@ export class dateService {
             done = count++ > 2 && monthIndex !== date.month();
             monthIndex = date.month();
         }
-        weeks[weeks.length-1][0].isLastStartWeek = true;
+        weeks[weeks.length - 1][0].isLastStartWeek = true;
         return weeks;
     }
 

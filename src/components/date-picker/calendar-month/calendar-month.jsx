@@ -6,14 +6,13 @@ const Day = (props) => {
     return (
         <div className={`day ${isCurrentMonth ? 'currentMonth' : ''} `}>
             {number}
-            {isLastStartWeek ? <div className=" day next-month-flipper">{number}</div> : null}
         </div>
     );
 };
 
 const Week = (props) => {
     const {days} = props;
-    return (<div className="week">{days.map(d => <Day dayInfo={d}/>)}</div>);
+    return (<div className="week">{days.map((d, i) => <Day key={i} dayInfo={d}/>)}</div>);
 };
 
 const DaysOfWeek = (props) => (
@@ -25,7 +24,7 @@ const DaysOfWeek = (props) => (
 const CalendarPin = () => (
     <div className="pins">
         {generateArray(10, i =>
-            <div className="pin">
+            <div key={i} className="pin">
                 <div></div>
                 <div></div>
             </div>)
@@ -37,22 +36,23 @@ const CalendarNavigator = (props) => {
     const {currentDate, nextMonth, previousMonth} = props;
     return (
         <div className="navigator-container">
-            <div className="month">{currentDate.month}</div>
-            <div className="navigator">
-                <div className="left-arrow" onClick={previousMonth}>{'<--'}</div>
-                <div className="right-arrow" onClick={nextMonth}>{'-->'}</div>
+            <div className="move-month" onClick={previousMonth}>
+                <i className="arrow left"></i>
             </div>
-            <div className="year">{currentDate.year}</div>
+            <div className="current-date">{currentDate}</div>
+            <div className="move-month" onClick={nextMonth}>
+                <i className="arrow right"></i>
+            </div>
             <CalendarPin/>
         </div>
     );
 };
 
 const CalendarTitle = (props) => {
-    const {daysOfWeek, currentDate} = props;
+    const {daysOfWeek} = props;
     return (
         <div className="calendar-title">
-            <CalendarNavigator currentDate={currentDate}/>
+            <CalendarNavigator {...props}/>
             <DaysOfWeek daysOfWeek={daysOfWeek}/>
         </div>
     );
@@ -62,10 +62,10 @@ const CalendarContent = (props) => props.weeks.map((week, i) => <Week key={i} da
 export class CalendarMonth extends React.Component {
 
     render() {
-        const {weeks, currentDate, daysOfWeek} = this.props;
+        const {weeks} = this.props;
         return (
             <div className="calendar-month">
-                <CalendarTitle daysOfWeek={daysOfWeek} currentDate={currentDate}/>
+                <CalendarTitle {...this.props}/>
                 <CalendarContent weeks={weeks}/>
             </div>);
     }
