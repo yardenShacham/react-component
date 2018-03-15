@@ -1,5 +1,5 @@
 import React from "react";
-import {generateArray} from '../../../utils/arrayUtils';
+
 
 const Day = (props) => {
     const {isCurrentMonth, number, isLastStartWeek} = props.dayInfo;
@@ -21,16 +21,7 @@ const DaysOfWeek = (props) => (
     </div>
 );
 
-const CalendarPin = () => (
-    <div className="pins">
-        {generateArray(10, i =>
-            <div key={i} className="pin">
-                <div></div>
-                <div></div>
-            </div>)
-        }
-    </div>
-);
+
 
 const CalendarNavigator = (props) => {
     const {currentDate, nextMonth, previousMonth} = props;
@@ -43,7 +34,6 @@ const CalendarNavigator = (props) => {
             <div className="move-month" onClick={nextMonth}>
                 <i className="arrow right"></i>
             </div>
-            <CalendarPin/>
         </div>
     );
 };
@@ -53,11 +43,18 @@ const CalendarTitle = (props) => {
     return (
         <div className="calendar-title">
             <CalendarNavigator {...props}/>
-            <DaysOfWeek daysOfWeek={daysOfWeek}/>
         </div>
     );
 };
-const CalendarContent = (props) => props.weeks.map((week, i) => <Week key={i} days={week}/>);
+const CalendarContent = (props) => {
+    const {daysOfWeek, weeks} = props;
+    return (
+        <div className="weeks-container">
+            <DaysOfWeek daysOfWeek={daysOfWeek}/>
+            {weeks.map((week, i) => <Week key={i} days={week}/>)}
+        </div>
+    );
+}
 
 export class CalendarMonth extends React.Component {
 
@@ -66,7 +63,7 @@ export class CalendarMonth extends React.Component {
         return (
             <div className="calendar-month">
                 <CalendarTitle {...this.props}/>
-                <CalendarContent weeks={weeks}/>
+                <CalendarContent {...this.props}/>
             </div>);
     }
 }

@@ -1,36 +1,21 @@
 .calendar-month {
-  .pins {
-    width: 540px;
-    display: flex;
-    justify-content: space-between;
-    position: absolute;
-    top: 8px;
-    .pin {
-      display: flex;
-      flex-direction: row;
-      div {
-        width: 4px;
-        border-radius: 3px;
-        margin-left: 2px;
-        background: silver;
-        height: 25px;
-      }
-    }
-  }
+  width: 296px;
+  height: 296px;
   display: flex;
   flex-direction: column;
+  position: absolute;
   .calendar-title {
+    flex: 25%;
     display: flex;
     flex-direction: column;
     .navigator-container {
       background: red;
       color: white;
-      font-size: 30px;
+      font-size: 130%;
       display: flex;
       justify-content: space-around;
       align-items: center;
-      border: 1px solid black;
-      height: 70px;
+      flex: 40;
       .move-month {
         cursor: pointer;
       }
@@ -41,45 +26,54 @@
         font-size: 30px;
       }
     }
+  }
+  .weeks-container {
+    flex: 80%;
+    display: flex;
+    flex-direction: column;
     .daysOfWeek {
+      flex: 0.7;
       display: flex;
       flex-direction: row;
     }
-  }
-  .week {
-    display: flex;
-    flex-direction: row;
-  }
-  .day {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid black;
-    min-width: 76px;
-    min-height: 40px;
-    background: white;
-    color: black;
-    &:not(.currentMonth) {
-      color: red;
+    .week {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
     }
-    &.title {
+    .day {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-width: 30px;
+      background: white;
       color: black;
-      background: gray;
-    }
-    &.next-month-flipper {
-      position: absolute;
-      top: 42.5%;
-      left: 28px;
-      border-bottom-left-radius: 40px;
+      &:not(.currentMonth) {
+        color: red;
+      }
+
+      &.title {
+        color: black;
+        background: gray;
+      }
+      &:not(.title) {
+        &:hover {
+          background: lightblue;
+          border-radius: 50%;
+          cursor: pointer;
+        }
+      }
     }
   }
+
 }
 
 i {
   border: solid black;
-  border-width: 0 7px 7px 0;
   display: inline-block;
-  padding: 6px;
+  border-width: 0 7px 7px 0;
+  padding: 50%;
 }
 
 .right {

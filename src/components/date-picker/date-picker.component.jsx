@@ -2,21 +2,16 @@ import React from "react";
 import {dateService} from '../../services/dateService';
 import {CalendarMonth} from './calendar-month';
 import {dateTypes, formats} from '../../utils/dateUtils';
+import {generateArray} from '../../utils/arrayUtils';
 
-const CalendarPages = () => (
-    <div className="calendar-pages">
-        <div className="page"></div>
-        <div className="page"></div>
-        <div className="page"></div>
-        <div className="page"></div>
-        <div className="page"></div>
-        <div className="page"></div>
-        <div className="page"></div>
-        <div className="page"></div>
-        <div className="page"></div>
-        <div className="page"></div>
-        <div className="page"></div>
-        <div className="page"></div>
+const CalendarPin = () => (
+    <div className="pins">
+        {generateArray(10, i =>
+            <div key={i} className="pin">
+                <div></div>
+                <div></div>
+            </div>)
+        }
     </div>
 );
 
@@ -79,12 +74,16 @@ export class DatePicker extends React.Component {
 
         return (
             <div className="date-picker">
-                <CalendarMonth weeks={weeks}
-                               daysOfWeek={this.daysOfWeekOptions}
-                               nextMonth={this.nextMonth}
-                               previousMonth={this.previousMonth}
-                               currentDate={currentDate.format(titleDateFormat)}/>
-                <CalendarPages/>
+                <div className="stand front">
+                    <CalendarMonth weeks={weeks}
+                                   daysOfWeek={this.daysOfWeekOptions}
+                                   nextMonth={this.nextMonth}
+                                   previousMonth={this.previousMonth}
+                                   currentDate={currentDate.format(titleDateFormat)}/>
+
+                </div>
+                <div className="stand back"></div>
+                <CalendarPin/>
             </div>);
     }
 }
