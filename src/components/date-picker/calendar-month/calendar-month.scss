@@ -4,6 +4,13 @@
   display: flex;
   flex-direction: column;
   position: absolute;
+  transform: rotateY(0deg);
+  transform-style: preserve-3d;
+  transform-origin: top;
+  transition: all .1s ease-in;
+  &:hover {
+    transform: rotateX(-180deg);
+  }
   .calendar-title {
     flex: 25%;
     display: flex;
