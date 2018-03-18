@@ -3,6 +3,7 @@ import {dateService} from '../../services/dateService';
 import {CalendarMonth} from './calendar-month';
 import {dateTypes, formats} from '../../utils/dateUtils';
 import {generateArray} from '../../utils/arrayUtils';
+import {addClass, setProperty, changeClass} from '../../utils/domUtils';
 
 const CalendarPin = () => (
     <div className="pins">
@@ -23,9 +24,10 @@ export class DatePicker extends React.Component {
         this.nextMonth = this.nextMonth.bind(this);
         this.previousMonth = this.previousMonth.bind(this);
         this.state = {
-            weeks: [],
-            currentDate: null
-        }
+            calendars: []
+        };
+        this.currentMonth = 0;
+        this.currentYear = this.dateService.getCurrentDate().year();
     }
 
     getProps() {
@@ -36,52 +38,89 @@ export class DatePicker extends React.Component {
         };
     }
 
+    getDegreeSpace = () => 4 + (this.currentMonth <= 4 ? this.currentMonth / 2 : this.currentMonth / 6);
+
     nextMonth() {
-        const {currentDate} = this.state;
-        const nextMonth = currentDate.month(currentDate.month() + 1).clone();
-        const weeks = this.dateService.getCalendar(nextMonth);
-        this.setState({
-            weeks,
-            currentDate: nextMonth
-        });
+        if (this.currentMonth + 1 <= 11) {
+            setProperty(this.generateCurrentId(), "lastDegree", () => `${this.getDegreeSpace()}deg`);
+            changeClass(this.generateCurrentId(), "fliped-back", "fliped-front");
+            this.currentMonth++;
+        }
+        else {
+            setProperty(this.generateCurrentId(), "lastDegree", () => `${this.getDegreeSpace()}deg`);
+            changeClass(this.generateCurrentId(), "fliped-back", "fliped-front");
+            this.currentYear++;
+            this.currentMonth = 0;
+            const nextCalendars = this.dateService.getFullYear(this.currentYear);
+            const merged = this.state.calendars.concat(nextCalendars.reverse());
+            this.setState({
+                calendars: merged
+            });
+
+        }
     }
 
+    generateCurrentId = () => `${this.currentMonth}-${this.currentYear}`;
+
     previousMonth() {
-        const {currentDate} = this.state;
-        const previousMonth = currentDate.month(currentDate.month() - 1).clone();
-        const weeks = this.dateService.getCalendar(previousMonth);
-        this.setState({
-            weeks,
-            currentDate: previousMonth
-        });
+        if (this.currentMonth - 1 >= 0) {
+            this.currentMonth--;
+            changeClass(this.generateCurrentId(), "fliped-front", "fliped-back");
+        }
+        else {
+            this.currentYear--;
+            const nextCalendars = this.dateService.getFullYear(this.currentYear);
+            const merged = nextCalendars.concat(this.state.calendars);
+            this.setState({
+                calendars: merged
+            });
+            this.currentMonth = 11;
+            changeClass(this.currentMonth, "fliped-front", "fliped-back");
+        }
     }
 
     componentWillMount() {
         const {isFullDayFormat} = this.getProps();
         this.daysOfWeekOptions = this.dateService.getDaysOfWeek(isFullDayFormat)
-        const now = this.dateService.getCurrentDate();
-        const weeks = this.dateService.getCalendar(now);
         this.setState({
-            weeks,
-            currentDate: now
+            calendars: this.dateService.getFullYear(this.currentYear).reverse()
         });
     }
+
+    componentDidMount() {
+        const now = this.dateService.getCurrentDate();
+        this.navigateTo(11, 2019);
+    }
+
+    navigateTo(month, year) {
+        var i;
+        while (!(this.currentYear === year && this.currentMonth === month)) {
+            this.currentMonth < month ? this.nextMonth() : this.previousMonth();
+            setTimeout(() => i++, (i + 1) * this.getFlipSpeed(month));
+        }
+    }
+
+    getFlipSpeed = (flipCount) => flipCount <= 2 ? 300 : flipCount <= 5 ? 200 : 20;
 
     render() {
         const {titleDateFormat} = this.getProps();
 
-        const {weeks, currentDate} = this.state;
+        const {calendars} = this.state;
 
         return (
             <div className="date-picker">
-                <div className="stand front">
-                    <CalendarMonth weeks={weeks}
-                                   daysOfWeek={this.daysOfWeekOptions}
-                                   nextMonth={this.nextMonth}
-                                   previousMonth={this.previousMonth}
-                                   currentDate={currentDate.format(titleDateFormat)}/>
+                <div className="stand front"></div>
+                {
+                    calendars.map((c, i) =>
+                        <CalendarMonth weeks={c.weeks}
+                                       key={i}
+                                       id={`${c.currentMonth.month()}-${c.currentMonth.year()}`}
+                                       daysOfWeek={this.daysOfWeekOptions}
+                                       nextMonth={this.nextMonth}
+                                       previousMonth={this.previousMonth}
+                                       currentMonth={c.currentMonth.format(titleDateFormat)}/>)
+                }
 
-                </div>
                 <div className="stand back"></div>
                 <CalendarPin/>
             </div>);

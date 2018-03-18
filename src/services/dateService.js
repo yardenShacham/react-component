@@ -9,6 +9,16 @@ export class dateService {
         return this.buildMonth(currentDate, startMonth.clone());
     }
 
+    getFullYear(year) {
+        return generateArray(12, (i) => {
+            const currentMonth = moment().year(year).month(i).clone();
+            return {
+                weeks: this.getCalendar(currentMonth),
+                currentMonth
+            };
+        });
+    }
+
     buildMonth(startMonth, currentMonth) {
         let weeks = [];
         let done = false;

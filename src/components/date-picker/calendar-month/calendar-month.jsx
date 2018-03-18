@@ -22,21 +22,27 @@ const DaysOfWeek = (props) => (
 );
 
 
-
 const CalendarNavigator = (props) => {
-    const {currentDate, nextMonth, previousMonth} = props;
-    return (
-        <div className="navigator-container">
-            <div className="move-month" onClick={previousMonth}>
-                <i className="arrow left"></i>
+        const {currentMonth, nextMonth, previousMonth} = props;
+        return (
+            <div className="navigator-container">
+                <button className="move-month" onClick={(e) => {
+                    e.preventDefault();
+                    previousMonth();
+                }}>
+                    <i className="arrow left"></i>
+                </button>
+                <div className="current-date">{currentMonth}</div>
+                <button className="move-month" onClick={(e) => {
+                    e.preventDefault();
+                    nextMonth();
+                }}>
+                    <i className="arrow right"></i>
+                </button>
             </div>
-            <div className="current-date">{currentDate}</div>
-            <div className="move-month" onClick={nextMonth}>
-                <i className="arrow right"></i>
-            </div>
-        </div>
-    );
-};
+        );
+    }
+;
 
 const CalendarTitle = (props) => {
     const {daysOfWeek} = props;
@@ -59,10 +65,10 @@ const CalendarContent = (props) => {
 export class CalendarMonth extends React.Component {
 
     render() {
-        const {weeks} = this.props;
+        const {weeks, id} = this.props;
         return (
-            <div className="calendar-month">
-                <CalendarTitle {...this.props}/>
+            <div ref="calendar" id={id} className="calendar-month">
+                <CalendarTitle{...this.props} />
                 <CalendarContent {...this.props}/>
             </div>);
     }

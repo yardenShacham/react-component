@@ -9,15 +9,15 @@
 
     &.front {
       z-index: 9999;
-      transform: skew(-8deg);
+      transform: skew(-3deg);
       background: white;
     }
     &.back {
       background: lightgray;
       position: absolute;
       z-index: 9998;
-      transform: skew(5deg);
-      margin-left: 30px;
+      transform: skew(3deg);
+      margin-left: 12px;
       width: 300px;
       height: 296px;
     }
@@ -28,8 +28,8 @@
     position: absolute;
     z-index: 10000;
     width: 296px;
-    margin-top: -10px;
-    margin-left: 20px;
+    margin-top: -12px;
+    margin-left: 9px;
 
     .pin {
       display: flex;
