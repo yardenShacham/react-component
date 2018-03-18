@@ -1,9 +1,9 @@
 import React from "react";
 import {dateService} from '../../services/dateService';
-import {CalendarMonth} from './calendar-month';
-import {dateTypes, formats} from '../../utils/dateUtils';
+import {CalendarMonth} from '../calendar-month';
+import {dateTypes, formats, isBefore, getDiff} from '../../utils/dateUtils';
 import {generateArray} from '../../utils/arrayUtils';
-import {addClass, setProperty, changeClass} from '../../utils/domUtils';
+import {setProperty, changeClass} from '../../utils/domUtils';
 
 const CalendarPin = () => (
     <div className="pins">
@@ -15,6 +15,11 @@ const CalendarPin = () => (
         }
     </div>
 );
+const Input = ({label, onInput, type}) =>
+    <div className="input-container">
+        <label>{label}</label>
+        <input onInput={onInput} type={type}/>
+    </div>
 
 export class DatePicker extends React.Component {
 
@@ -89,18 +94,34 @@ export class DatePicker extends React.Component {
 
     componentDidMount() {
         const now = this.dateService.getCurrentDate();
-        this.navigateTo(11, 2019);
+        this.navigateTo(2, 2018);
     }
 
     navigateTo(month, year) {
-        var i;
-        while (!(this.currentYear === year && this.currentMonth === month)) {
-            this.currentMonth < month ? this.nextMonth() : this.previousMonth();
-            setTimeout(() => i++, (i + 1) * this.getFlipSpeed(month));
+        const navigateDate = {month, year};
+        const currentDate = {
+            year: this.currentYear,
+            month: this.currentMonth
+        };
+        const flipTypeName = isBefore(currentDate, navigateDate) ? "nextMonth" : "previousMonth";
+        const pagesToFlip = Math.abs(getDiff(currentDate, navigateDate, dateTypes.diffMonth));
+        if (pagesToFlip <= 16) {
+            generateArray(pagesToFlip, (i) =>
+                setTimeout(() => this[flipTypeName](), (i + 1) * this.getFlipSpeed(pagesToFlip)));
+        }
+        else {
+            this.currentYear = year;
+            this.currentMonth = 0;
+            this.setState({
+                calendars: this.dateService.getFullYear(year).reverse()
+            });
+            this.navigateTo(month, year);
         }
     }
 
-    getFlipSpeed = (flipCount) => flipCount <= 2 ? 300 : flipCount <= 5 ? 200 : 20;
+    getFlipSpeed = (flipCount) => flipCount
+    <= 2 ? 300 : flipCount
+    <= 5 ? 200 : 9;
 
     render() {
         const {titleDateFormat} = this.getProps();
