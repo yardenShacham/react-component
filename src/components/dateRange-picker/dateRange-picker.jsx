@@ -36,9 +36,8 @@ export class DateRangePicker extends React.Component {
     }
 
     getProps() {
-        const {isFullDayFormat, titleDateFormat} = this.props;
+        const {titleDateFormat} = this.props;
         return {
-            isFullDayFormat: isFullDayFormat === undefined || isFullDayFormat === null ? true : false,
             titleDateFormat: titleDateFormat || formats.veryShurt
         };
     }
@@ -85,7 +84,7 @@ export class DateRangePicker extends React.Component {
     }
 
     componentWillMount() {
-        const {isFullDayFormat} = this.getProps();
+        const {isFullDayFormat} = this.props;
         this.daysOfWeekOptions = this.dateService.getDaysOfWeek(isFullDayFormat)
         this.setState({
             calendars: this.dateService.getFullYear(this.currentYear).reverse()

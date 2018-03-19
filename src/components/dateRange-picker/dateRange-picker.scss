@@ -1,4 +1,8 @@
 .dateRange-picker {
+  @import "../calendar-month/calendar-month.scss";
+  .calendar-month {
+    margin-left: 305px;
+  }
   .stand {
     display: flex;
     border: 2px solid darkgrey;

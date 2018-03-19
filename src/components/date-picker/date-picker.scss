@@ -1,46 +1,47 @@
 .date-picker {
-   .stand {
-     display: flex;
-     border: 2px solid darkgrey;
-     border-radius: 5px;
-     position: absolute;
-     width: 296px;
-     height: 350px;
+  @import "../calendar-month/calendar-month.scss";
+  .stand {
+    display: flex;
+    border: 2px solid darkgrey;
+    border-radius: 5px;
+    position: absolute;
+    width: 296px;
+    height: 350px;
 
-     &.front {
-       z-index: 9999;
-       transform: skew(-3deg);
-       background: white;
-     }
-     &.back {
-       background: lightgray;
-       position: absolute;
-       z-index: 9998;
-       transform: skew(3deg);
-       margin-left: 12px;
-       width: 300px;
-       height: 350px;
-     }
-   }
-   .pins {
-     display: flex;
-     justify-content: space-between;
-     position: absolute;
-     z-index: 10000;
-     width: 296px;
-     margin-top: -12px;
-     margin-left: 306px;
+    &.front {
+      z-index: 9999;
+      transform: skew(-3deg);
+      background: white;
+    }
+    &.back {
+      background: lightgray;
+      position: absolute;
+      z-index: 9998;
+      transform: skew(3deg);
+      margin-left: 12px;
+      width: 300px;
+      height: 350px;
+    }
+  }
+  .pins {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    z-index: 10000;
+    width: 296px;
+    margin-top: -12px;
+    margin-left: 4px;
 
-     .pin {
-       display: flex;
-       flex-direction: row;
-       div {
-         width: 4px;
-         border-radius: 100%;
-         border: 2px solid lightgray;
-         height: 25px;
-       }
-     }
-   }
+    .pin {
+      display: flex;
+      flex-direction: row;
+      div {
+        width: 4px;
+        border-radius: 100%;
+        border: 2px solid lightgray;
+        height: 25px;
+      }
+    }
+  }
 
- }
+}
