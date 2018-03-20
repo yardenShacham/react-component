@@ -57,4 +57,11 @@ export class dateService {
     getCurrentDate() {
         return moment();
     }
+
+    getDefaultDateRange() {
+        let from = this.getCurrentDate();
+        return {
+            from, to: from
+        };
+    }
 }

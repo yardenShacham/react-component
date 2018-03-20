@@ -1,9 +1,10 @@
 import React from "react";
 import {dateService} from '../../services/dateService';
-import {CalendarMonth} from '../calendar-month';
 import {dateTypes, formats, isBefore, getDiff} from '../../utils/dateUtils';
 import {generateArray} from '../../utils/arrayUtils';
 import {setProperty, changeClass} from '../../utils/domUtils';
+import {CalendarFlicker} from '../calendar-flicker/calendar-flicker.component.jsx';
+import {Input} from '../input';
 
 const CalendarPin = () => (
     <div className="pins">
@@ -15,10 +16,10 @@ const CalendarPin = () => (
         }
     </div>
 );
-const Input = ({label, onInput, type}) =>
-    <div className="input-container">
+const LabelConatiner = ({label, onChange}) =>
+    <div className="input-label-container">
         <label>{label}</label>
-        <input onInput={onInput} type={type}/>
+        <Input type="text" onChange={onChange}/>
     </div>
 
 export class DateRangePicker extends React.Component {
@@ -29,16 +30,24 @@ export class DateRangePicker extends React.Component {
         this.nextMonth = this.nextMonth.bind(this);
         this.previousMonth = this.previousMonth.bind(this);
         this.state = {
-            calendars: []
+            calendars: [],
+            isCalendarOpen: false,
+            selectedRange: null
         };
-        this.currentMonth = 0;
-        this.currentYear = this.dateService.getCurrentDate().year();
+        this.init();
     }
 
+    init = () => {
+        this.currentMonth = 0;
+        this.standDgree = 1;
+        this.currentYear = this.dateService.getCurrentDate().year();
+    };
+
     getProps() {
-        const {titleDateFormat} = this.props;
+        const {titleDateFormat, selectedRange} = this.props;
         return {
-            titleDateFormat: titleDateFormat || formats.veryShurt
+            titleDateFormat: titleDateFormat || formats.veryShurt,
+            selectedRange: selectedRange || this.dateService.getDefaultDateRange()
         };
     }
 
@@ -84,17 +93,29 @@ export class DateRangePicker extends React.Component {
     }
 
     componentWillMount() {
-        const {isFullDayFormat} = this.props;
+        const {isFullDayFormat, selectedRange} = this.getProps();
         this.daysOfWeekOptions = this.dateService.getDaysOfWeek(isFullDayFormat)
         this.setState({
-            calendars: this.dateService.getFullYear(this.currentYear).reverse()
+            calendars: this.dateService.getFullYear(this.currentYear).reverse(),
+            selectedRange
         });
     }
 
-    componentDidMount() {
-        const now = this.dateService.getCurrentDate();
-        this.navigateTo(2, 2018);
-    }
+    calendarDidOpened = () => {
+        const {selectedRange} = this.state;
+        this.navigateTo(selectedRange.from.month(), selectedRange.from.year());
+    };
+
+    closeCalendar = () => {
+        this.setState({isCalendarOpen: false});
+        this.init();
+    };
+
+    onSelecedDataChanged = (selectedRange) => {
+        this.setState({
+            selectedRange
+        });
+    };
 
     navigateTo(month, year) {
         const navigateDate = {month, year};
@@ -128,11 +149,17 @@ export class DateRangePicker extends React.Component {
         const {calendars} = this.state;
         return (
             <div className="dateRange-picker">
-                <CalendarFlicker calendars={calendars}
+                <CalendarFlicker didOpen={this.calendarDidOpened}
+                                 daysOfWeekOptions={this.daysOfWeekOptions}
+                                 onChange={this.onSelecedDataChanged}
+                                 onFocusOut={this.closeCalendar}
+                                 nextMonth={this.nextMonth}
+                                 previousMonth={this.previousMonth}
+                                 calendars={calendars}
                                  titleDateFormat={titleDateFormat}>
                     <div className="stand-content">
-                        <Input type="text" label="Satrt Date"/>
-                        <Input type="text" label="End Date"/>
+                        <LabelConatiner label="Satrt Date"/>
+                        <LabelConatiner label="End Date"/>
                     </div>
                 </CalendarFlicker>
             </div>);

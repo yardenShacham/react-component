@@ -77,8 +77,7 @@ export class DatePicker extends React.Component {
     }
 
     componentWillMount() {
-        const {isFullDayFormat} = this.props;
-        const {selectedDate} = this.getProps();
+        const {isFullDayFormat, selectedDate} = this.getProps();
         this.daysOfWeekOptions = this.dateService.getDaysOfWeek(isFullDayFormat);
         this.setState({
             selectedDate,
@@ -93,8 +92,8 @@ export class DatePicker extends React.Component {
     };
 
     closeCalendar = () => {
-        this.setState({isCalendarOpen: false});
-        this.init();
+        //this.setState({isCalendarOpen: false});
+        //this.init();
     };
 
     navigateTo(month, year) {

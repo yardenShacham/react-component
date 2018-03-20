@@ -8,5 +8,5 @@ import {DateRangePicker} from './components/dateRange-picker';
 
 export const components = [
     <DatePicker/>,
-    // <DateRangePicker/>
+    //<DateRangePicker/>
 ];
