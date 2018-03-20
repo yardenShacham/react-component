@@ -1,25 +1,10 @@
 import React from "react";
 import {dateService} from '../../services/dateService';
-import {CalendarMonth} from '../calendar-month';
+import {Input} from '../input';
 import {dateTypes, formats, isBefore, getDiff} from '../../utils/dateUtils';
 import {generateArray} from '../../utils/arrayUtils';
 import {setProperty, changeClass} from '../../utils/domUtils';
-
-const CalendarPin = () => (
-    <div className="pins">
-        {generateArray(10, i =>
-            <div key={i} className="pin">
-                <div></div>
-                <div></div>
-            </div>)
-        }
-    </div>
-);
-const Input = ({label, onInput, type}) =>
-    <div className="input-container">
-        <label>{label}</label>
-        <input onInput={onInput} type={type}/>
-    </div>
+import {CalendarFlicker} from '../calendar-flicker/calendar-flicker.component.jsx';
 
 export class DatePicker extends React.Component {
 
@@ -29,20 +14,28 @@ export class DatePicker extends React.Component {
         this.nextMonth = this.nextMonth.bind(this);
         this.previousMonth = this.previousMonth.bind(this);
         this.state = {
-            calendars: []
+            calendars: [],
+            isCalendarOpen: false,
+            selectedDate: null
         };
-        this.currentMonth = 0;
-        this.currentYear = this.dateService.getCurrentDate().year();
+        this.init();
     }
+
+    init = () => {
+        this.currentMonth = 0;
+        this.standDgree = 1;
+        this.currentYear = this.dateService.getCurrentDate().year();
+    };
 
     getProps() {
-        const { titleDateFormat} = this.props;
+        const {titleDateFormat, selectedDate} = this.props;
         return {
-            titleDateFormat: titleDateFormat || formats.veryShurt
+            titleDateFormat: titleDateFormat || formats.veryShurt,
+            selectedDate: selectedDate || this.dateService.getCurrentDate()
         };
     }
 
-    getDegreeSpace = () => 4 + (this.currentMonth <= 4 ? this.currentMonth / 2 : this.currentMonth / 6);
+    getDegreeSpace = () => this.standDgree + (this.currentMonth <= 4 ? this.currentMonth / 2 : this.currentMonth / 6);
 
     nextMonth() {
         if (this.currentMonth + 1 <= 11) {
@@ -85,16 +78,24 @@ export class DatePicker extends React.Component {
 
     componentWillMount() {
         const {isFullDayFormat} = this.props;
-        this.daysOfWeekOptions = this.dateService.getDaysOfWeek(isFullDayFormat)
+        const {selectedDate} = this.getProps();
+        this.daysOfWeekOptions = this.dateService.getDaysOfWeek(isFullDayFormat);
         this.setState({
+            selectedDate,
             calendars: this.dateService.getFullYear(this.currentYear).reverse()
         });
+
     }
 
-    componentDidMount() {
-        const now = this.dateService.getCurrentDate();
-        this.navigateTo(2, 2018);
-    }
+    calendarDidOpened = () => {
+        const {selectedDate} = this.state;
+        this.navigateTo(selectedDate.month(), selectedDate.year());
+    };
+
+    closeCalendar = () => {
+        this.setState({isCalendarOpen: false});
+        this.init();
+    };
 
     navigateTo(month, year) {
         const navigateDate = {month, year};
@@ -118,31 +119,34 @@ export class DatePicker extends React.Component {
         }
     }
 
+    onSelecedDataChanged = (selectedDate) => {
+        this.setState({
+            selectedDate
+        });
+    };
+
     getFlipSpeed = (flipCount) => flipCount
     <= 2 ? 300 : flipCount
     <= 5 ? 200 : 9;
 
     render() {
         const {titleDateFormat} = this.getProps();
-
-        const {calendars} = this.state;
+        const {calendars, isCalendarOpen, selectedDate} = this.state;
 
         return (
             <div className="date-picker">
-                <div className="stand front"></div>
-                {
-                    calendars.map((c, i) =>
-                        <CalendarMonth weeks={c.weeks}
-                                       key={i}
-                                       id={`${c.currentMonth.month()}-${c.currentMonth.year()}`}
-                                       daysOfWeek={this.daysOfWeekOptions}
-                                       nextMonth={this.nextMonth}
-                                       previousMonth={this.previousMonth}
-                                       currentMonth={c.currentMonth.format(titleDateFormat)}/>)
-                }
-
-                <div className="stand back"></div>
-                <CalendarPin/>
+                <Input type="text"
+                       value={selectedDate && selectedDate.format(formats.default)}
+                       onClick={() => this.setState({isCalendarOpen: true})}/>
+                {isCalendarOpen &&
+                <CalendarFlicker didOpen={this.calendarDidOpened}
+                                 daysOfWeekOptions={this.daysOfWeekOptions}
+                                 onChange={this.onSelecedDataChanged}
+                                 onFocusOut={this.closeCalendar}
+                                 nextMonth={this.nextMonth}
+                                 previousMonth={this.previousMonth}
+                                 calendars={calendars}
+                                 titleDateFormat={titleDateFormat}/>}
             </div>);
     }
 }

@@ -1,0 +1,22 @@
+@import "../../aserts/colors";
+
+.input-container {
+  display: flex;
+  position: relative;
+  border: 1px solid;
+  border-radius: 3px;
+  input {
+    flex: 1;
+  }
+  &.error {
+    border-color: $borderInputContainerError;
+  }
+  &.focused {
+    border-color: $borderInputFocus;
+  }
+  .icon-container {
+    position: absolute;
+    left: 3px;
+    top: 1px;
+  }
+}

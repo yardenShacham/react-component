@@ -1,3 +1,3 @@
 import './dateRange-picker.scss';
 
-export {DateRangePicker} from './dateRange-picker.jsx';
+export {DateRangePicker} from './dateRange-picker.component.jsx';

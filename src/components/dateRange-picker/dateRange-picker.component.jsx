@@ -128,25 +128,13 @@ export class DateRangePicker extends React.Component {
         const {calendars} = this.state;
         return (
             <div className="dateRange-picker">
-                <div className="stand front">
+                <CalendarFlicker calendars={calendars}
+                                 titleDateFormat={titleDateFormat}>
                     <div className="stand-content">
                         <Input type="text" label="Satrt Date"/>
                         <Input type="text" label="End Date"/>
                     </div>
-                </div>
-                {
-                    calendars.map((c, i) =>
-                        <CalendarMonth weeks={c.weeks}
-                                       key={i}
-                                       id={`${c.currentMonth.month()}-${c.currentMonth.year()}`}
-                                       daysOfWeek={this.daysOfWeekOptions}
-                                       nextMonth={this.nextMonth}
-                                       previousMonth={this.previousMonth}
-                                       currentMonth={c.currentMonth.format(titleDateFormat)}/>)
-                }
-
-                <div className="stand back"></div>
-                <CalendarPin/>
+                </CalendarFlicker>
             </div>);
     }
 }

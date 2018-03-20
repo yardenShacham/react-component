@@ -1,4 +1,20 @@
 .date-picker {
+  width: 130px;
+  height: 30px;
+  display: flex;
+  position: relative;
+  .flicker-conatiner {
+    position: absolute;
+    top: 30px;
+  }
+  .input-container {
+    flex: 1;
+    input {
+      font-size: 25px;
+      font-weight: bold;
+      width: 140px;
+    }
+  }
   @import "../calendar-month/calendar-month.scss";
   .stand {
     display: flex;
@@ -10,16 +26,16 @@
 
     &.front {
       z-index: 9999;
-      transform: skew(-3deg);
+      transform: skew(0deg);
       background: white;
     }
     &.back {
       background: lightgray;
       position: absolute;
       z-index: 9998;
-      transform: skew(3deg);
-      margin-left: 12px;
-      width: 300px;
+      transform: skew(1deg);
+      margin-left: 4px;
+      width: 296px;
       height: 350px;
     }
   }

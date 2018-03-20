@@ -1,1 +1,1 @@
-export {CalendarMonth} from './calendar-month.jsx';
+export {CalendarMonth} from './calendar-month.component.jsx';
