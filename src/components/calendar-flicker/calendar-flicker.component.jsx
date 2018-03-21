@@ -27,10 +27,8 @@ export class CalendarFlicker extends React.Component {
 
     focusOut = (e) => {
         const {onFocusOut} = this.props;
-        if (onFocusOut) {
-            if (e.relatedTarget === null || e.relatedTarget && this.isNotContain(e.relatedTarget, "move-month")) {
-                onFocusOut();
-            }
+        if (onFocusOut && e.relatedTarget === null) {
+            onFocusOut();
         }
     };
 

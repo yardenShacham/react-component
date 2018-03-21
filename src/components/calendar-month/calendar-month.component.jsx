@@ -5,10 +5,10 @@ const Day = ({onChange, dayInfo}) => {
     return (
         <div onClick={() => onChange(date)}
              className={`day ${isCurrentMonth ? 'currentMonth' : ''} `}>
-        {number}
+            {number}
         </div>
-        );
-    };
+    );
+};
 
 const Week = ({onChange, days}) => (
     <div className="week">{days.map((d, i) => <Day key={i} onChange={onChange}
@@ -19,10 +19,10 @@ const DaysOfWeek = ({daysOfWeek}) => (
     <div className="daysOfWeek">
         {daysOfWeek.map((d, i) => <div key={i} className="day title">{d}</div>)}
     </div>
-    );
+);
 
 
-    const CalendarNavigator = (props) => {
+const CalendarNavigator = (props) => {
         const {currentMonth, nextMonth, previousMonth} = props;
         return (
             <div className="navigator-container">
@@ -47,9 +47,9 @@ const DaysOfWeek = ({daysOfWeek}) => (
 const CalendarTitle = (props) => {
     const {daysOfWeek} = props;
     return (
-    <div className="calendar-title">
-    <CalendarNavigator {...props}/>
-    </div>
+        <div className="calendar-title">
+            <CalendarNavigator {...props}/>
+        </div>
     );
 };
 const CalendarContent = ({daysOfWeek, weeks, onChange}) =>
@@ -61,11 +61,11 @@ const CalendarContent = ({daysOfWeek, weeks, onChange}) =>
 export class CalendarMonth extends React.Component {
 
     render() {
-    const {weeks, id} = this.props;
-    return (
-    <div ref="calendar" id={id} className="calendar-month">
-    <CalendarTitle{...this.props} />
-    <CalendarContent {...this.props}/>
-    </div>);
-}
+        const {id} = this.props;
+        return (
+            <div ref="calendar" id={id} className="calendar-month">
+                <CalendarTitle{...this.props} />
+                <CalendarContent {...this.props}/>
+            </div>);
+    }
 }

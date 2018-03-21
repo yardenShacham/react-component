@@ -1,11 +1,44 @@
 .date-picker {
-  width: 130px;
-  height: 30px;
+  @import "../../aserts/fontello-embedded.css";
+  width: 170px;
   display: flex;
+  align-items: center;
   position: relative;
+  .result-conatiner {
+    flex: 1;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    background-color: #fff;
+    padding: 3px;
+    height: 34px;
+    border: 1px solid #d1d1d1;
+    border-radius: 5px;
+    .icon-container {
+      flex: 10%;
+      time.icon {
+        font-size: 10px; /* change icon size */
+        display: block;
+        position: relative;
+        width: 25px;
+        height: 25px;
+        background-color: #fff;
+        border-radius: 0.6em;
+        box-shadow: 0 1px 0 #bdbdbd, 0 2px 0 #fff, 0 3px 0 #bdbdbd, 0 4px 0 #fff, 0 5px 0 #bdbdbd, 0 0 0 1px #bdbdbd;
+        overflow: hidden;
+      }
+    }
+    .selected-date-container {
+      text-align: end;
+      margin-right: 10px;
+      flex: 90%;
+      font-weight: bold;
+      font-size: 22px;
+    }
+  }
   .flicker-conatiner {
     position: absolute;
-    top: 30px;
+    top: 55px;
     .stand {
       display: flex;
       border: 2px solid darkgrey;

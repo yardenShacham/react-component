@@ -72,35 +72,35 @@
   }
   50% {
     z-index: 9997;
-    transform: skew(-3deg) rotateX(-120deg) translateZ(0);
+    transform: skew(0deg) rotateX(-120deg) translateZ(0);
   }
   55% {
     z-index: 9997;
-    transform: skew(-3deg) rotateX(-150deg) translateZ(0);
+    transform: skew(0deg) rotateX(-150deg) translateZ(0);
   }
   60% {
     z-index: 9997;
-    transform: skew(-3deg) rotateX(-180deg) translateZ(0);
+    transform: skew(0deg) rotateX(-180deg) translateZ(0);
   }
   70% {
     z-index: 10000;
-    transform: skew(-3deg) rotateX(-150deg) translateZ(0);
+    transform: skew(0deg) rotateX(-150deg) translateZ(0);
   }
   80% {
     z-index: 10000;
-    transform: skew(-3deg) rotateX(-120deg) translateZ(0);
+    transform: skew(0deg) rotateX(-120deg) translateZ(0);
   }
   90% {
     z-index: 10000;
-    transform: skew(-3deg) rotateX(-90deg) translateZ(0);
+    transform: skew(0deg) rotateX(-90deg) translateZ(0);
   }
   95% {
     z-index: 10000;
-    transform: skew(-3deg) rotateX(-60deg) translateZ(0);
+    transform: skew(0deg) rotateX(-60deg) translateZ(0);
   }
   100% {
     z-index: 10000;
-    transform: skew(-3deg) rotateX(0deg) translateZ(0);
+    transform: skew(0deg) rotateX(0deg) translateZ(0);
   }
 }
 
@@ -121,7 +121,7 @@
   &.fliped-front {
     animation: flipAnimation 1s linear both;
   }
-  &.fliped-back{
+  &.fliped-back {
     animation: flipAnimationBack 1s linear both;
   }
   .calendar-title {

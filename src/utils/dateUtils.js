@@ -5,7 +5,9 @@ export const formats = {
     veryShurt: "MMMM, YYYY",
     fullDay: "dddd",
     shurtDay: "ddd",
+    superShurtDay: "dd",
     shurtMonth: "MMMM",
+    superShurtMonth: "MM",
     shurtYear: "YYYY"
 };
 export const dateTypes = {

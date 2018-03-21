@@ -6,6 +6,16 @@ import {generateArray} from '../../utils/arrayUtils';
 import {setProperty, changeClass} from '../../utils/domUtils';
 import {CalendarFlicker} from '../calendar-flicker/calendar-flicker.component.jsx';
 
+const ResultContainer = ({icon, selectedDate, onClick}) =>
+    <div onClick={onClick} className="result-conatiner">
+        <div className="icon-container">
+            {icon || <i style={{fontSize: '22px'}} className="icon-calendar"></i>}
+        </div>
+        <div className="selected-date-container">
+            {selectedDate && selectedDate.format(formats.default)}
+        </div>
+    </div>
+
 export class DatePicker extends React.Component {
 
     constructor(props) {
@@ -92,8 +102,8 @@ export class DatePicker extends React.Component {
     };
 
     closeCalendar = () => {
-        //this.setState({isCalendarOpen: false});
-        //this.init();
+        this.setState({isCalendarOpen: false});
+        this.init();
     };
 
     navigateTo(month, year) {
@@ -134,9 +144,9 @@ export class DatePicker extends React.Component {
 
         return (
             <div className="date-picker">
-                <Input type="text"
-                       value={selectedDate && selectedDate.format(formats.default)}
-                       onClick={() => this.setState({isCalendarOpen: true})}/>
+                <ResultContainer
+                    selectedDate={selectedDate}
+                    onClick={() => this.setState({isCalendarOpen: true})}/>
                 {isCalendarOpen &&
                 <CalendarFlicker didOpen={this.calendarDidOpened}
                                  daysOfWeekOptions={this.daysOfWeekOptions}
