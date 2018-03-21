@@ -1,17 +1,27 @@
 import React from "react";
+import {isDateEqual} from "../../utils/dateUtils";
 
-const Day = ({onChange, dayInfo}) => {
+const Day = ({onChange, dayInfo, isDateDisable, selectedDate}) => {
     const {isCurrentMonth, number, date} = dayInfo;
+    const disableClass = 'disable';
+    const currentMonthClass = 'currentMonth';
+    const selectedDateClass = 'selected';
+    const isSelectedClass = selectedDate && date && isDateEqual(selectedDate, date) ? selectedDateClass : '';
+    let isDisableClass = isDateDisable && isDateDisable(date) ? disableClass : '';
+    let isCurrentMonthClass = isCurrentMonth ? currentMonthClass : '';
     return (
-        <div onClick={() => onChange(date)}
-             className={`day ${isCurrentMonth ? 'currentMonth' : ''} `}>
+        <div onClick={() => isDisableClass !== disableClass && onChange(date)}
+             className={`day ${isCurrentMonthClass} ${isSelectedClass} ${isDisableClass}`}>
             {number}
         </div>
     );
 };
 
-const Week = ({onChange, days}) => (
-    <div className="week">{days.map((d, i) => <Day key={i} onChange={onChange}
+const Week = ({onChange, days, isDateDisable, selectedDate}) => (
+    <div className="week">{days.map((d, i) => <Day key={i}
+                                                   selectedDate={selectedDate}
+                                                   isDateDisable={isDateDisable}
+                                                   onChange={onChange}
                                                    dayInfo={d}/>)}</div>
 );
 
@@ -23,39 +33,36 @@ const DaysOfWeek = ({daysOfWeek}) => (
 
 
 const CalendarNavigator = (props) => {
-        const {currentMonth, nextMonth, previousMonth} = props;
-        return (
-            <div className="navigator-container">
-                <button className="move-month" onClick={(e) => {
-                    e.preventDefault();
-                    previousMonth();
-                }}>
-                    <i className="arrow left"></i>
-                </button>
-                <div className="current-date">{currentMonth}</div>
-                <button className="move-month" onClick={(e) => {
-                    e.preventDefault();
-                    nextMonth();
-                }}>
-                    <i className="arrow right"></i>
-                </button>
-            </div>
-        );
-    }
-;
-
-const CalendarTitle = (props) => {
-    const {daysOfWeek} = props;
+    const {currentMonth, nextMonth, previousMonth} = props;
     return (
-        <div className="calendar-title">
-            <CalendarNavigator {...props}/>
+        <div className="navigator-container">
+            <button className="move-month" onClick={(e) => {
+                e.preventDefault();
+                previousMonth();
+            }}>
+                <i className="arrow left"></i>
+            </button>
+            <div className="current-date">{currentMonth}</div>
+            <button className="move-month" onClick={(e) => {
+                e.preventDefault();
+                nextMonth();
+            }}>
+                <i className="arrow right"></i>
+            </button>
         </div>
     );
 };
-const CalendarContent = ({daysOfWeek, weeks, onChange}) =>
+
+const CalendarTitle = (props) =>
+    <div className="calendar-title">
+        <CalendarNavigator {...props}/>
+    </div>;
+
+const CalendarContent = ({daysOfWeek, weeks, onChange, isDateDisable, selectedDate}) =>
     <div className="weeks-container">
         <DaysOfWeek daysOfWeek={daysOfWeek}/>
-        {weeks.map((week, i) => <Week key={i} onChange={onChange} days={week}/>)}
+        {weeks.map((week, i) => <Week key={i} selectedDate={selectedDate} isDateDisable={isDateDisable}
+                                      onChange={onChange} days={week}/>)}
     </div>
 
 export class CalendarMonth extends React.Component {

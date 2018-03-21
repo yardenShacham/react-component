@@ -38,8 +38,10 @@ export class DatePicker extends React.Component {
     };
 
     getProps() {
-        const {titleDateFormat, selectedDate} = this.props;
+        const {titleDateFormat, selectedDate, isDateDisable, isCloseAfterSelect} = this.props;
         return {
+            isCloseAfterSelect: isCloseAfterSelect || true,
+            isDateDisable: isDateDisable,
             titleDateFormat: titleDateFormat || formats.veryShurt,
             selectedDate: selectedDate || this.dateService.getCurrentDate()
         };
@@ -129,9 +131,12 @@ export class DatePicker extends React.Component {
     }
 
     onSelecedDataChanged = (selectedDate) => {
+        const {isCloseAfterSelect} = this.getProps();
         this.setState({
-            selectedDate
+            selectedDate,
         });
+        if (isCloseAfterSelect)
+            this.closeCalendar();
     };
 
     getFlipSpeed = (flipCount) => flipCount
@@ -139,7 +144,7 @@ export class DatePicker extends React.Component {
     <= 5 ? 200 : 9;
 
     render() {
-        const {titleDateFormat} = this.getProps();
+        const {titleDateFormat, isDateDisable, isCloseAfterSelect} = this.getProps();
         const {calendars, isCalendarOpen, selectedDate} = this.state;
 
         return (
@@ -153,8 +158,10 @@ export class DatePicker extends React.Component {
                                  onChange={this.onSelecedDataChanged}
                                  onFocusOut={this.closeCalendar}
                                  nextMonth={this.nextMonth}
+                                 isDateDisable={isDateDisable}
                                  previousMonth={this.previousMonth}
                                  calendars={calendars}
+                                 selectedDate={selectedDate}
                                  titleDateFormat={titleDateFormat}/>}
             </div>);
     }

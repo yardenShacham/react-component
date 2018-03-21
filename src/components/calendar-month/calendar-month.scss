@@ -171,19 +171,33 @@
       align-items: center;
       min-width: 30px;
       background: white;
+      font-weight: bold;
       color: black;
-      &:not(.currentMonth) {
-        color: red;
-      }
       &.title {
         color: black;
         background: gray;
       }
       &:not(.title) {
-        &:hover {
-          background: lightblue;
+        &:not(.disable) {
+          &:hover {
+            background: lightblue;
+            border-radius: 50%;
+            cursor: pointer;
+          }
+          &.selected {
+            cursor: pointer;
+            border-radius: 50%;
+            background: #0054A5;
+            color: #fff;
+            font-size: larger;
+          }
+        }
+        &:not(.currentMonth) {
+          color: red;
+        }
+        &.disable {
           border-radius: 50%;
-          cursor: pointer;
+          background: #d1d1d1;
         }
       }
     }

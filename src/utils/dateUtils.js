@@ -1,4 +1,5 @@
 import moment from 'moment';
+import {isEqual} from "./objectUtils";
 
 export const formats = {
     default: "YYYY-MM-DD",
@@ -24,5 +25,7 @@ export const getDiff = (date1, date2, diffType) => getDate(date1).diff(getDate(d
 export const isBefore = (date1, date2) => getDate(date1).isSameOrBefore(getDate(date2));
 
 export const removeTime = (date) => date.day(0).hour(0).minute(0).second(0).millisecond(0);
+
+export const isDateEqual = (date1, date2) => date1.format(formats.default) === date2.format(formats.default);
 
 export const isToday = (date) => date.isSame(new Date(), dateTypes.day);

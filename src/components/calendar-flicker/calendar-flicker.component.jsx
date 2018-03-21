@@ -37,8 +37,8 @@ export class CalendarFlicker extends React.Component {
 
     render() {
         const {
-            calendars, nextMonth, onChange, className,
-            previousMonth, daysOfWeekOptions, titleDateFormat, children
+            calendars, nextMonth, onChange, className, isDateDisable,
+            previousMonth, daysOfWeekOptions, titleDateFormat, children, selectedDate
         } = this.props;
 
         return (
@@ -55,6 +55,8 @@ export class CalendarFlicker extends React.Component {
                                        id={`${c.currentMonth.month()}-${c.currentMonth.year()}`}
                                        daysOfWeek={daysOfWeekOptions}
                                        onChange={onChange}
+                                       isDateDisable={isDateDisable}
+                                       selectedDate={selectedDate}
                                        nextMonth={nextMonth}
                                        previousMonth={previousMonth}
                                        currentMonth={c.currentMonth.format(titleDateFormat)}/>)
