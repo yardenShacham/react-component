@@ -151,9 +151,7 @@ export class DatePicker extends React.Component {
     <= 2 ? 300 : flipCount
     <= 5 ? 200 : 9;
 
-    clearSelectedDate = () => {
-        this.closeCalendar(null);
-    };
+    clearSelectedDate = () => this.closeCalendar(null);
 
     render() {
         const {titleDateFormat, isDateDisable, showNotRelatedMonthDates} = this.getProps();
