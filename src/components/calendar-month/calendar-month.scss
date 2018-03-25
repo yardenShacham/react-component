@@ -178,6 +178,7 @@
         background: gray;
       }
       &:not(.title) {
+        margin: 2px;
         &:not(.disable) {
           &:hover {
             background: lightblue;

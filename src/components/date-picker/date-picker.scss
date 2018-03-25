@@ -1,6 +1,6 @@
 .date-picker {
   @import "../../aserts/fontello-embedded.css";
-  width: 170px;
+  width: 200px;
   display: flex;
   align-items: center;
   position: relative;
@@ -9,6 +9,7 @@
     display: flex;
     cursor: pointer;
     align-items: center;
+    text-align: center;
     background-color: #fff;
     padding: 3px;
     height: 34px;
@@ -17,12 +18,16 @@
     .icon-container {
       flex: 10%;
     }
+    .icon-container-small {
+      flex: 0%;
+    }
     .selected-date-container {
-      text-align: end;
-      margin-right: 10px;
-      flex: 90%;
+      flex: 45%;
       font-weight: bold;
       font-size: 22px;
+      &.empty {
+        flex: 90%;
+      }
     }
   }
   .flicker-conatiner {

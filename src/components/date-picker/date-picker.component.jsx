@@ -1,19 +1,28 @@
 import React from "react";
 import {dateService} from '../../services/dateService';
-import {Input} from '../input';
 import {dateTypes, formats, isBefore, getDiff} from '../../utils/dateUtils';
 import {generateArray} from '../../utils/arrayUtils';
 import {setProperty, changeClass} from '../../utils/domUtils';
 import {CalendarFlicker} from '../calendar-flicker/calendar-flicker.component.jsx';
 
-const ResultContainer = ({icon, selectedDate, onClick}) =>
-    <div onClick={onClick} className="result-conatiner">
-        <div className="icon-container">
+const ResultContainer = ({icon, selectedDate, onClick, onRemove}) =>
+    <div className="result-conatiner">
+        <div onClick={onClick} className={`${selectedDate ? 'icon-container-small' : 'icon-container'}`}>
             {icon || <i style={{fontSize: '22px'}} className="icon-calendar"></i>}
         </div>
-        <div className="selected-date-container">
-            {selectedDate && selectedDate.format(formats.default)}
-        </div>
+        {
+            selectedDate ? [
+                    <div key="1" onClick={onClick} className="selected-date-container">
+                        {selectedDate.format(formats.default)}
+                    </div>,
+                    <div key="2" onClick={onRemove} className="icon-container-small">
+                        {icon || <i style={{fontSize: '18px'}} className="icon-cancel"></i>}
+                    </div>
+                ] :
+                <div onClick={onClick} className="selected-date-container empty">Select date...</div>
+
+        }
+
     </div>
 
 export class DatePicker extends React.Component {
@@ -28,22 +37,27 @@ export class DatePicker extends React.Component {
             isCalendarOpen: false,
             selectedDate: null
         };
-        this.init();
     }
 
-    init = () => {
+    init = (selectedDate) => {
+        selectedDate = selectedDate === undefined ? this.state.selectedDate : selectedDate;
         this.currentMonth = 0;
         this.standDgree = 1;
-        this.currentYear = this.dateService.getCurrentDate().year();
+        this.currentYear = selectedDate && selectedDate.year() || this.dateService.getCurrentDate().year();
+        this.setState({
+            selectedDate,
+            calendars: this.dateService.getFullYear(this.currentYear).reverse()
+        });
     };
 
     getProps() {
-        const {titleDateFormat, selectedDate, isDateDisable, isCloseAfterSelect} = this.props;
+        const {titleDateFormat, selectedDate, isDateDisable, isCloseAfterSelect, showNotRelatedMonthDates} = this.props;
         return {
+            showNotRelatedMonthDates: showNotRelatedMonthDates || false,
             isCloseAfterSelect: isCloseAfterSelect || true,
             isDateDisable: isDateDisable,
             titleDateFormat: titleDateFormat || formats.veryShurt,
-            selectedDate: selectedDate || this.dateService.getCurrentDate()
+            selectedDate: selectedDate || null
         };
     }
 
@@ -78,34 +92,30 @@ export class DatePicker extends React.Component {
         }
         else {
             this.currentYear--;
+            this.currentMonth = 11;
             const nextCalendars = this.dateService.getFullYear(this.currentYear);
-            const merged = nextCalendars.concat(this.state.calendars);
+            const merged = this.state.calendars.concat(nextCalendars.reverse());
             this.setState({
                 calendars: merged
-            });
-            this.currentMonth = 11;
-            changeClass(this.currentMonth, "fliped-front", "fliped-back");
+            }, () => changeClass(this.generateCurrentId(), "fliped-front", "fliped-back"));
         }
     }
 
     componentWillMount() {
         const {isFullDayFormat, selectedDate} = this.getProps();
         this.daysOfWeekOptions = this.dateService.getDaysOfWeek(isFullDayFormat);
-        this.setState({
-            selectedDate,
-            calendars: this.dateService.getFullYear(this.currentYear).reverse()
-        });
-
+        this.init(selectedDate);
     }
 
     calendarDidOpened = () => {
         const {selectedDate} = this.state;
-        this.navigateTo(selectedDate.month(), selectedDate.year());
+        let selectedNav = selectedDate || this.dateService.getCurrentDate();
+        this.navigateTo(selectedNav.month(), selectedNav.year());
     };
 
-    closeCalendar = () => {
+    closeCalendar = (selectedDate) => {
+        this.init(selectedDate);
         this.setState({isCalendarOpen: false});
-        this.init();
     };
 
     navigateTo(month, year) {
@@ -134,32 +144,36 @@ export class DatePicker extends React.Component {
         const {isCloseAfterSelect} = this.getProps();
         this.setState({
             selectedDate,
-        });
-        if (isCloseAfterSelect)
-            this.closeCalendar();
+        }, () => isCloseAfterSelect && this.closeCalendar());
     };
 
     getFlipSpeed = (flipCount) => flipCount
     <= 2 ? 300 : flipCount
     <= 5 ? 200 : 9;
 
+    clearSelectedDate = () => {
+        this.closeCalendar(null);
+    };
+
     render() {
-        const {titleDateFormat, isDateDisable, isCloseAfterSelect} = this.getProps();
+        const {titleDateFormat, isDateDisable, showNotRelatedMonthDates} = this.getProps();
         const {calendars, isCalendarOpen, selectedDate} = this.state;
 
         return (
             <div className="date-picker">
                 <ResultContainer
                     selectedDate={selectedDate}
+                    onRemove={this.clearSelectedDate}
                     onClick={() => this.setState({isCalendarOpen: true})}/>
                 {isCalendarOpen &&
                 <CalendarFlicker didOpen={this.calendarDidOpened}
                                  daysOfWeekOptions={this.daysOfWeekOptions}
                                  onChange={this.onSelecedDataChanged}
-                                 onFocusOut={this.closeCalendar}
+                                 onFocusOut={this.closeCalendar.bind(this, undefined)}
                                  nextMonth={this.nextMonth}
                                  isDateDisable={isDateDisable}
                                  previousMonth={this.previousMonth}
+                                 showNotRelatedMonthDates={showNotRelatedMonthDates}
                                  calendars={calendars}
                                  selectedDate={selectedDate}
                                  titleDateFormat={titleDateFormat}/>}

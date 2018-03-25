@@ -7,7 +7,8 @@ import {DateRangePicker} from './components/dateRange-picker';
 import moment from 'moment';
 
 const isPastDay = (date) => moment().diff(date, 'd') > 0;
+const selectedDate = moment();
 export const components = [
-    <DatePicker isDateDisable={(date) => isPastDay(date)}/>,
+    <DatePicker  isDateDisable={(date) => isPastDay(date)}/>,
     //<DateRangePicker/>
 ];

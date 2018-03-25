@@ -1,7 +1,7 @@
 import React from "react";
 import {isDateEqual} from "../../utils/dateUtils";
 
-const Day = ({onChange, dayInfo, isDateDisable, selectedDate}) => {
+const Day = ({onChange, dayInfo, isDateDisable, selectedDate, showNotRelatedMonthDates}) => {
     const {isCurrentMonth, number, date} = dayInfo;
     const disableClass = 'disable';
     const currentMonthClass = 'currentMonth';
@@ -10,19 +10,19 @@ const Day = ({onChange, dayInfo, isDateDisable, selectedDate}) => {
     let isDisableClass = isDateDisable && isDateDisable(date) ? disableClass : '';
     let isCurrentMonthClass = isCurrentMonth ? currentMonthClass : '';
     return (
-        <div onClick={() => isDisableClass !== disableClass && onChange(date)}
-             className={`day ${isCurrentMonthClass} ${isSelectedClass} ${isDisableClass}`}>
-            {number}
-        </div>
+        (isCurrentMonth || showNotRelatedMonthDates) ?
+            <div onClick={() => isDisableClass !== disableClass && onChange(date)}
+                 className={`day ${isCurrentMonthClass} ${isSelectedClass} ${isDisableClass}`}>
+                {number}
+            </div> :
+            <div className="day"></div>
     );
 };
 
-const Week = ({onChange, days, isDateDisable, selectedDate}) => (
-    <div className="week">{days.map((d, i) => <Day key={i}
-                                                   selectedDate={selectedDate}
-                                                   isDateDisable={isDateDisable}
-                                                   onChange={onChange}
-                                                   dayInfo={d}/>)}</div>
+const Week = (props) => (
+    <div className="week">{props.days.map((d, i) => <Day key={i}
+                                                         {...props}
+                                                         dayInfo={d}/>)}</div>
 );
 
 const DaysOfWeek = ({daysOfWeek}) => (
@@ -58,11 +58,10 @@ const CalendarTitle = (props) =>
         <CalendarNavigator {...props}/>
     </div>;
 
-const CalendarContent = ({daysOfWeek, weeks, onChange, isDateDisable, selectedDate}) =>
+const CalendarContent = (props) =>
     <div className="weeks-container">
-        <DaysOfWeek daysOfWeek={daysOfWeek}/>
-        {weeks.map((week, i) => <Week key={i} selectedDate={selectedDate} isDateDisable={isDateDisable}
-                                      onChange={onChange} days={week}/>)}
+        <DaysOfWeek daysOfWeek={props.daysOfWeek}/>
+        {props.weeks.map((week, i) => <Week key={i} {...props} days={week}/>)}
     </div>
 
 export class CalendarMonth extends React.Component {
