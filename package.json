@@ -1,11 +1,11 @@
 {
-  "name": "rComponent",
-  "version": "1.0.4",
+  "name": "rc-deisgn",
+  "version": "1.0.0",
   "description": "React Component",
   "author": "Yarden Shacham <yarden101111@gmail.com>",
   "license": "MIT",
   "main": "bundle.js",
-  "format": "umd",
+  "format": "cjs",
   "style": "styles.css",
   "repository": {
     "type": "git",
@@ -23,9 +23,8 @@
     "prod": "npm run build && cd dist && npm publish"
   },
   "dependencies": {
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "moment": "^2.21.0"
+    "moment": "^2.21.0",
+    "react": "^16.2.0"
   },
   "devDependencies": {
     "@types/es6-promise": "^3.3.0",
@@ -34,6 +33,7 @@
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
+    "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-env": "^1.6.1",
@@ -63,8 +63,8 @@
     "resolve-url-loader": "^2.3.0",
     "rollup": "^0.56.5",
     "rollup-plugin-babel": "^3.0.3",
-    "rollup-plugin-commonjs": "^9.0.0",
-    "rollup-plugin-node-resolve": "^3.0.3",
+    "rollup-plugin-commonjs": "^9.1.0",
+    "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-plugin-sass": "^0.6.0",
     "rollup-plugin-uglify": "^3.0.0",
     "sass-loader": "^6.0.7",

@@ -1,15 +1,13 @@
 import React from 'react';
 import {render} from 'react-dom';
 import {App} from './App.jsx'
-import {components} from '../src'
 import './styles.scss';
+import {DatePicker} from '../dist/bundle';
+import moment from 'moment';
 
-const allComponents = components.map((c, i) =>
-    <div key={i} className="react-component">
-        {c}
-    </div>);
+const isPastDay = (date) => moment().diff(date, 'd') > 0;
 render((
     <App>
-        {allComponents}
+        <DatePicker isDateDisable={(date) => isPastDay(date)}/>
     </App>
 ), document.getElementById('app'));

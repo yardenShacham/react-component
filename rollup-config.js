@@ -30,10 +30,6 @@ module.exports = (packageJson, fs) => {
         output: {
             file: `dist/${main}`,
             format,
-            name,
-            globals: {
-                react: "React"
-            },
             sourcemap: true
         }
     }

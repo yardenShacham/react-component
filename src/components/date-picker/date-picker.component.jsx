@@ -25,7 +25,7 @@ const ResultContainer = ({icon, selectedDate, onClick, onRemove}) =>
 
     </div>
 
-export class DatePicker extends React.Component {
+class DatePicker extends React.Component {
 
     constructor(props) {
         super(props);
@@ -178,3 +178,5 @@ export class DatePicker extends React.Component {
             </div>);
     }
 }
+
+export  default DatePicker;
