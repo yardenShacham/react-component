@@ -4,25 +4,42 @@ import {dateTypes, formats, isBefore, getDiff} from '../../utils/dateUtils';
 import {generateArray} from '../../utils/arrayUtils';
 import {setProperty, changeClass} from '../../utils/domUtils';
 import {CalendarFlicker} from '../calendar-flicker/calendar-flicker.component.jsx';
-import {Input} from '../input';
 
-const CalendarPin = () => (
-    <div className="pins">
-        {generateArray(10, i =>
-            <div key={i} className="pin">
-                <div></div>
-                <div></div>
-            </div>)
-        }
+const DateRangeViewer = ({selectedRange, isFromSelected, onFromClicked, onToClicked, displayFormat}) => (
+    <div className="date-range-viewer">
+        <div onClick={onFromClicked}
+             className={`date-viewer ${isFromSelected ? 'selected' : ''}`}>{selectedRange.from.format(displayFormat)}</div>
+        <div className="seprator">
+            <i className="icon-right"></i>
+        </div>
+        <div onClick={onToClicked}
+             className={`date-viewer ${!isFromSelected ? 'selected' : ''}`}>{selectedRange.to.format(displayFormat)}</div>
     </div>
 );
-const LabelConatiner = ({label, onChange}) =>
-    <div className="input-label-container">
-        <label>{label}</label>
-        <Input type="text" onChange={onChange}/>
+
+const ResultContainer = ({icon, isFromSelected, displayFormat, selectedRange, onFromClicked, onToClicked, onRemove}) =>
+    <div className="result-conatiner">
+        <div onClick={onFromClicked} className={`${selectedRange ? 'icon-container-small' : 'icon-container'}`}>
+            {icon || <i style={{fontSize: '22px'}} className="icon-calendar"></i>}
+        </div>
+        {
+            selectedRange ? [
+                    <DateRangeViewer key="1"
+                                     selectedRange={selectedRange}
+                                     isFromSelected={isFromSelected}
+                                     displayFormat={displayFormat}
+                                     onFromClicked={onFromClicked}
+                                     onToClicked={onToClicked}/>,
+                    <div key="2" onClick={onRemove} className="icon-container-small">
+                        {icon || <i style={{fontSize: '18px'}} className="icon-cancel"></i>}
+                    </div>
+                ] :
+                <div onClick={onFromClicked} className="date-range-viewer">Select date range...</div>
+        }
+
     </div>
 
-export class DateRangePicker extends React.Component {
+class DateRangePicker extends React.Component {
 
     constructor(props) {
         super(props);
@@ -32,26 +49,35 @@ export class DateRangePicker extends React.Component {
         this.state = {
             calendars: [],
             isCalendarOpen: false,
+            isFromSelected: true,
             selectedRange: null
         };
-        this.init();
     }
 
-    init = () => {
+    init = (selectedRange) => {
+        selectedRange = selectedRange === undefined ? this.state.selectedRange : selectedRange;
         this.currentMonth = 0;
         this.standDgree = 1;
-        this.currentYear = this.dateService.getCurrentDate().year();
+        this.currentYear = selectedRange && selectedRange.from && selectedRange.from.year() || this.dateService.getCurrentDate().year();
+        this.setState({
+            selectedRange,
+            calendars: this.dateService.getFullYear(this.currentYear).reverse()
+        });
     };
 
     getProps() {
-        const {titleDateFormat, selectedRange} = this.props;
+        const {titleDateFormat, displayFormat, selectedRange, isDateDisable, isCloseAfterSelect, showNotRelatedMonthDates} = this.props;
         return {
+            showNotRelatedMonthDates: showNotRelatedMonthDates || false,
+            isCloseAfterSelect: isCloseAfterSelect || true,
+            isDateDisable: isDateDisable,
             titleDateFormat: titleDateFormat || formats.veryShurt,
-            selectedRange: selectedRange || this.dateService.getDefaultDateRange()
+            selectedRange: selectedRange || null,
+            displayFormat: displayFormat || 'MMM DD'
         };
     }
 
-    getDegreeSpace = () => 4 + (this.currentMonth <= 4 ? this.currentMonth / 2 : this.currentMonth / 6);
+    getDegreeSpace = () => this.standDgree + (this.currentMonth <= 4 ? this.currentMonth / 2 : this.currentMonth / 6);
 
     nextMonth() {
         if (this.currentMonth + 1 <= 11) {
@@ -82,39 +108,37 @@ export class DateRangePicker extends React.Component {
         }
         else {
             this.currentYear--;
+            this.currentMonth = 11;
             const nextCalendars = this.dateService.getFullYear(this.currentYear);
-            const merged = nextCalendars.concat(this.state.calendars);
+            const merged = this.state.calendars.concat(nextCalendars.reverse());
             this.setState({
                 calendars: merged
-            });
-            this.currentMonth = 11;
-            changeClass(this.currentMonth, "fliped-front", "fliped-back");
+            }, () => changeClass(this.generateCurrentId(), "fliped-front", "fliped-back"));
         }
     }
 
     componentWillMount() {
         const {isFullDayFormat, selectedRange} = this.getProps();
-        this.daysOfWeekOptions = this.dateService.getDaysOfWeek(isFullDayFormat)
-        this.setState({
-            calendars: this.dateService.getFullYear(this.currentYear).reverse(),
-            selectedRange
-        });
+        this.daysOfWeekOptions = this.dateService.getDaysOfWeek(isFullDayFormat);
+        this.init(selectedRange);
     }
 
     calendarDidOpened = () => {
         const {selectedRange} = this.state;
-        this.navigateTo(selectedRange.from.month(), selectedRange.from.year());
+        let selectedNav = selectedRange && selectedRange.from || this.dateService.getCurrentDate();
+        this.navigateTo(selectedNav.month(), selectedNav.year());
     };
 
-    closeCalendar = () => {
+    tryOpenCalendar = (isFromSelected) => {
+        const {isCalendarOpen} = this.state;
+        if (!isCalendarOpen) {
+            this.setState({isCalendarOpen: true, isFromSelected})
+        }
+    }
+
+    closeCalendar = (selectedRange) => {
+        this.init(selectedRange);
         this.setState({isCalendarOpen: false});
-        this.init();
-    };
-
-    onSelecedDataChanged = (selectedRange) => {
-        this.setState({
-            selectedRange
-        });
     };
 
     navigateTo(month, year) {
@@ -139,29 +163,46 @@ export class DateRangePicker extends React.Component {
         }
     }
 
+    onSelecedDataChanged = (selectedRange) => {
+        const {isCloseAfterSelect} = this.getProps();
+        this.setState({
+            selectedRange,
+        }, () => isCloseAfterSelect && this.closeCalendar());
+    };
+
     getFlipSpeed = (flipCount) => flipCount
     <= 2 ? 300 : flipCount
     <= 5 ? 200 : 9;
 
-    render() {
-        const {titleDateFormat} = this.getProps();
+    clearSelectedRange = () => this.closeCalendar(null);
 
-        const {calendars} = this.state;
+    render() {
+        const {titleDateFormat, displayFormat, isDateDisable, showNotRelatedMonthDates} = this.getProps();
+        const {calendars, isFromSelected, isCalendarOpen, selectedRange} = this.state;
+
         return (
             <div className="dateRange-picker">
+                <ResultContainer
+                    selectedRange={selectedRange}
+                    displayFormat={displayFormat}
+                    isFromSelected={isFromSelected}
+                    onRemove={this.clearSelectedRange}
+                    onToClicked={() => this.tryOpenCalendar(false)}
+                    onFromClicked={() => this.tryOpenCalendar(true)}/>
+                {isCalendarOpen &&
                 <CalendarFlicker didOpen={this.calendarDidOpened}
                                  daysOfWeekOptions={this.daysOfWeekOptions}
                                  onChange={this.onSelecedDataChanged}
-                                 onFocusOut={this.closeCalendar}
+                                 onFocusOut={this.closeCalendar.bind(this, undefined)}
                                  nextMonth={this.nextMonth}
+                                 isDateDisable={isDateDisable}
                                  previousMonth={this.previousMonth}
+                                 showNotRelatedMonthDates={showNotRelatedMonthDates}
                                  calendars={calendars}
-                                 titleDateFormat={titleDateFormat}>
-                    <div className="stand-content">
-                        <LabelConatiner label="Satrt Date"/>
-                        <LabelConatiner label="End Date"/>
-                    </div>
-                </CalendarFlicker>
+                                 selectedRange={selectedRange}
+                                 titleDateFormat={titleDateFormat}/>}
             </div>);
     }
 }
+
+export default DateRangePicker;

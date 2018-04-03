@@ -2,12 +2,12 @@ import React from 'react';
 import {render} from 'react-dom';
 import {App} from './App.jsx'
 import './styles.scss';
-import {DatePicker} from '../dist/bundle';
+import {DateRangePicker} from '../src';
 import moment from 'moment';
 
 const isPastDay = (date) => moment().diff(date, 'd') > 0;
 render((
     <App>
-        <DatePicker isDateDisable={(date) => isPastDay(date)}/>
+        <DateRangePicker  selectedRange={{from: moment(), to: moment().add(5, 'days')}}/>
     </App>
 ), document.getElementById('app'));

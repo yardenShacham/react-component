@@ -30,4 +30,6 @@ export const removeTime = (date) => date.day(0).hour(0).minute(0).second(0).mill
 
 export const isDateEqual = (date1, date2) => date1.format(formats.default) === date2.format(formats.default);
 
+export const isBetween = (date, dateRange) => dateRange && dateRange.from && dateRange.to && date.isBetween(dateRange.from, dateRange.to, null, '[]');
+
 export const isToday = (date) => date.isSame(new Date(), dateTypes.day);

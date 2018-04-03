@@ -180,10 +180,12 @@
       &:not(.title) {
         margin: 2px;
         &:not(.disable) {
-          &:hover {
-            background: lightblue;
-            border-radius: 50%;
-            cursor: pointer;
+          &.currentMonth {
+            &:hover {
+              background: lightblue;
+              border-radius: 50%;
+              cursor: pointer;
+            }
           }
           &.selected {
             cursor: pointer;

@@ -1,12 +1,12 @@
 {
-  "name": "rc-deisgn",
-  "version": "1.0.0",
+  "name": "rc-design",
+  "version": "1.0.3",
   "description": "React Component",
   "author": "Yarden Shacham <yarden101111@gmail.com>",
   "license": "MIT",
   "main": "bundle.js",
   "format": "cjs",
-  "style": "styles.css",
+  "style": "rc-design.css",
   "repository": {
     "type": "git",
     "url": "https://github.com/yardenShacham/react-component.git"

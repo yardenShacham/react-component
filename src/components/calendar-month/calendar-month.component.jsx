@@ -1,12 +1,18 @@
 import React from "react";
-import {isDateEqual} from "../../utils/dateUtils";
+import {isDateEqual, isBetween} from "../../utils/dateUtils";
 
-const Day = ({onChange, dayInfo, isDateDisable, selectedDate, showNotRelatedMonthDates}) => {
+const Day = ({onChange, dayInfo, isDateDisable, selectedDate, selectedRange, showNotRelatedMonthDates}) => {
     const {isCurrentMonth, number, date} = dayInfo;
     const disableClass = 'disable';
     const currentMonthClass = 'currentMonth';
     const selectedDateClass = 'selected';
-    const isSelectedClass = selectedDate && date && isDateEqual(selectedDate, date) ? selectedDateClass : '';
+    let isSelectedClass = '';
+    if (selectedRange) {
+        isSelectedClass = date && isBetween(date, selectedRange) ? selectedDateClass : '';
+    }
+    else if (selectedDate) {
+        isSelectedClass = date && isDateEqual(selectedDate, date) ? selectedDateClass : '';
+    }
     let isDisableClass = isDateDisable && isDateDisable(date) ? disableClass : '';
     let isCurrentMonthClass = isCurrentMonth ? currentMonthClass : '';
     return (

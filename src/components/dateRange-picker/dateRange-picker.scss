@@ -1,39 +1,67 @@
 .dateRange-picker {
+  width: 270px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  .result-conatiner {
+    flex: 1;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    text-align: center;
+    justify-content: space-around;
+    background-color: #fff;
+    padding: 3px;
+    height: 34px;
+    border: 1px solid #d1d1d1;
+    border-radius: 5px;
+    .icon-container-small {
+      flex: 0%;
+    }
+    .date-range-viewer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+      font-size: 21px;
+      .seprator {
+        margin-right: 10px;
+        margin-left: 10px;
+      }
+      .date-viewer {
+        text-align: center;
+        border-radius: 3px;
+        padding: 5px;
+        &.selected{
+          background: blue;
+          color: white;
+        }
+      }
+    }
+  }
   .flicker-conatiner {
     position: absolute;
-    top: 30px;
+    top: 55px;
     .stand {
       display: flex;
       border: 2px solid darkgrey;
       border-radius: 5px;
       position: absolute;
-      width: 596px;
+      width: 296px;
       height: 350px;
 
       &.front {
         z-index: 9999;
-        transform: skew(-3deg);
+        transform: skew(0deg);
         background: white;
-        .stand-content {
-          margin-left: 25px;
-          margin-top: 15px;
-          .input-label-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-            label {
-              margin-right: 10px;
-            }
-          }
-        }
       }
       &.back {
         background: lightgray;
         position: absolute;
         z-index: 9998;
-        transform: skew(3deg);
-        margin-left: 18px;
-        width: 596px;
+        transform: skew(1deg);
+        margin-left: 4px;
+        width: 296px;
         height: 350px;
       }
     }
@@ -44,7 +72,7 @@
       z-index: 10000;
       width: 296px;
       margin-top: -12px;
-      margin-left: 306px;
+      margin-left: 4px;
 
       .pin {
         display: flex;
@@ -58,9 +86,14 @@
       }
     }
     @import "../calendar-month/calendar-month.scss";
-    .calendar-month {
-      margin-left: 305px;
-      transform: rotateX(0deg) skew(-3deg) translateZ(0);
+  }
+  .input-container {
+    flex: 1;
+    input {
+      font-size: 25px;
+      font-weight: bold;
+      width: 140px;
     }
   }
+
 }
