@@ -18,19 +18,12 @@ const Input = ({label, onInput, type}) =>
         <input onInput={onInput} type={type}/>
     </div>
 
-export class CalendarFlicker extends React.Component {
+class CalendarFlicker extends React.Component {
 
     componentDidMount() {
         const {didOpen} = this.props;
         didOpen();
     }
-
-    focusOut = (e) => {
-        const {onFocusOut} = this.props;
-        if (onFocusOut && e.relatedTarget === null) {
-            onFocusOut();
-        }
-    };
 
     isNotContain = (conatiner, className) => !conatiner.classList.contains(className);
 
@@ -39,9 +32,7 @@ export class CalendarFlicker extends React.Component {
         const {calendars, className, daysOfWeekOptions, titleDateFormat, children} = this.props;
 
         return (
-            <div onBlur={this.focusOut}
-                 tabIndex={-2}
-                 ref={e => e && e.focus()}
+            <div ref={e => e && e.focus()}
                  style={{outline: 'none'}}
                  className={`flicker-conatiner ${className || ''}`}>
                 <div className="stand front">{children}</div>
@@ -60,4 +51,6 @@ export class CalendarFlicker extends React.Component {
         );
     }
 }
+
+export default CalendarFlicker
 

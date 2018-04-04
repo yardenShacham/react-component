@@ -3,7 +3,7 @@ import {dateService} from '../../services/dateService';
 import {dateTypes, formats, isBefore, getDiff} from '../../utils/dateUtils';
 import {generateArray} from '../../utils/arrayUtils';
 import {setProperty, changeClass} from '../../utils/domUtils';
-import {CalendarFlicker} from '../calendar-flicker/calendar-flicker.component.jsx';
+import CalendarFlicker from '../calendar-flicker/calendar-flicker.component.jsx';
 
 const ResultContainer = ({icon, selectedDate, onClick, onRemove}) =>
     <div className="result-conatiner">

@@ -24,7 +24,8 @@
   },
   "dependencies": {
     "moment": "^2.21.0",
-    "react": "^16.2.0"
+    "react": "^16.2.0",
+    "react-onclickoutside": "^6.7.1"
   },
   "devDependencies": {
     "@types/es6-promise": "^3.3.0",
