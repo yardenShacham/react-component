@@ -1,4 +1,4 @@
-import {removeTime, isToday, dateTypes, formats} from '../utils/dateUtils';
+import {removeTime, isToday, dateTypes, isDateValid, formats} from '../utils/dateUtils';
 import {generateArray} from '../utils/arrayUtils';
 import moment from 'moment';
 
@@ -57,6 +57,9 @@ export class dateService {
     getCurrentDate() {
         return moment();
     }
+
+    basicDateRangeValidation = (dateRange) => isDateValid(dateRange.from) &&
+        isDateValid(dateRange.to) && dateRange.from.isSameOrBefore(dateRange.to);
 
     getDefaultDateRange() {
         let from = this.getCurrentDate();

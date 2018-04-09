@@ -1,7 +1,7 @@
 import React from "react";
 import {isDateEqual, isBetween} from "../../utils/dateUtils";
 
-const Day = ({onChange, dayInfo, isDateDisable, selectedDate, selectedRange, showNotRelatedMonthDates}) => {
+const Day = ({onChange, onMouseHover, dayInfo, isDateDisable, selectedDate, selectedRange, showNotRelatedMonthDates}) => {
     const {isCurrentMonth, number, date} = dayInfo;
     const disableClass = 'disable';
     const currentMonthClass = 'currentMonth';
@@ -18,6 +18,7 @@ const Day = ({onChange, dayInfo, isDateDisable, selectedDate, selectedRange, sho
     return (
         (isCurrentMonth || showNotRelatedMonthDates) ?
             <div onClick={() => isDisableClass !== disableClass && onChange(date)}
+                 onMouseEnter={(e) => onMouseHover && onMouseHover(e, date)}
                  className={`day ${isCurrentMonthClass} ${isSelectedClass} ${isDisableClass}`}>
                 {number}
             </div> :

@@ -51,19 +51,23 @@ class DateRangePicker extends React.Component {
             calendars: [],
             isCalendarOpen: false,
             isFromSelected: null,
-            selectedRange: null
+            selectedRange: null,
+            rangeResult: null,
+            isHoverMode: false
         };
     }
 
     init = (selectedRange) => {
+        const {onChange} = this.props;
         selectedRange = selectedRange === undefined ? this.state.selectedRange : selectedRange;
         this.currentMonth = 0;
         this.standDgree = 1;
         this.currentYear = selectedRange && selectedRange.from && selectedRange.from.year() || this.dateService.getCurrentDate().year();
         this.setState({
             selectedRange,
+            rangeResult: selectedRange && Object.assign({}, selectedRange) || null,
             calendars: this.dateService.getFullYear(this.currentYear).reverse()
-        });
+        }, () => onChange && onChange(selectedRange));
     };
 
     getProps() {
@@ -178,24 +182,46 @@ class DateRangePicker extends React.Component {
         }
     }
 
+    onMouseHover = (e, selectedDate) => {
+        const {isHoverMode, selectedRange, isFromSelected} = this.state;
+        if (isHoverMode) {
+            const selected = {
+                from: isFromSelected && selectedDate || selectedRange.from,
+                to: selectedDate
+            };
+            if (this.dateService.basicDateRangeValidation(selected)) {
+                this.setState({
+                    selectedRange: selected
+                });
+            }
+        }
+    };
+
     onSelecedDataChanged = (selectedDate) => {
         const {isCloseAfterSelect} = this.getProps();
-        let isCloseNeedToClose = false, isFromSelected = null;
-        let selectedRange = this.state && this.state.selectedRange || {from: selectedDate, to: selectedDate};
-        if (this.state && this.state.isFromSelected) {
-            selectedRange.from = selectedDate;
-            isFromSelected = false;
+        const {selectedRange, isFromSelected} = this.state;
+        const selected = {
+            from: isFromSelected && selectedDate || selectedRange.from,
+            to: selectedDate
+        };
+        const stateInfo = isFromSelected ? {
+            isHoverMode: true,
+            isCloseNeedToClose: false,
+            isFromSelected: false
+        } : {
+            isCloseNeedToClose: true,
+            isHoverMode: false,
+            isFromSelected: false
+        };
+
+        if (this.dateService.basicDateRangeValidation(selected)) {
+            const newState = Object.assign({
+                selectedRange: selected,
+                rangeResult: Object.assign({}, selected),
+            }, stateInfo);
+
+            this.setState(newState, () => !this.state.isFromSelected && stateInfo.isCloseNeedToClose && isCloseAfterSelect && this.closeCalendar());
         }
-        else {
-            selectedRange.to = selectedDate;
-            isCloseNeedToClose = true;
-            isFromSelected = null;
-        }
-        this.setState({
-                selectedRange,
-                isFromSelected: false,
-            }, () => !this.state.isFromSelected && isCloseNeedToClose && isCloseAfterSelect && setTimeout(this.closeCalendar, 100)
-        );
     };
 
     getFlipSpeed = (flipCount) => flipCount <= 2 ? 300 : 200;
@@ -204,12 +230,12 @@ class DateRangePicker extends React.Component {
 
     render() {
         const {titleDateFormat, displayFormat, isDateDisable, showNotRelatedMonthDates} = this.getProps();
-        const {calendars, isFromSelected, isCalendarOpen, selectedRange} = this.state;
-
+        const {calendars, isFromSelected, isCalendarOpen, selectedRange, rangeResult} = this.state;
+        const dynamicStyle = {width: selectedRange ? '275px' : '220px'};
         return (
-            <div className="dateRange-picker">
+            <div className="dateRange-picker" style={dynamicStyle}>
                 <ResultContainer
-                    selectedRange={selectedRange}
+                    selectedRange={rangeResult}
                     displayFormat={displayFormat}
                     isFromSelected={isFromSelected}
                     onRemove={this.clearSelectedRange}
@@ -220,6 +246,7 @@ class DateRangePicker extends React.Component {
                                  daysOfWeekOptions={this.daysOfWeekOptions}
                                  onChange={this.onSelecedDataChanged}
                                  nextMonth={this.nextMonth}
+                                 onMouseHover={this.onMouseHover}
                                  isDateDisable={isDateDisable}
                                  previousMonth={this.previousMonth}
                                  showNotRelatedMonthDates={showNotRelatedMonthDates}
